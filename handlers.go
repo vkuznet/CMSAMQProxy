@@ -8,10 +8,25 @@ import (
 	"net/http"
 )
 
-// Record defines general WMArchive record
+// Record defines general CMSAMQProxy record
 type Record map[string]interface{}
 
-// DataHandler handles all WMArchive requests
+// StatusHandler handles all CMSAMQProxy requests
+func StatusHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(info()))
+		return
+	}
+	var headers []interface{}
+	headers = append(headers, r.Method)
+	headers = append(headers, r.URL.Path)
+	headers = append(headers, r.RemoteAddr)
+	log.Println(headers...)
+	w.WriteHeader(http.StatusOK)
+}
+
+// DataHandler handles all CMSAMQProxy requests
 func DataHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.WriteHeader(http.StatusOK)

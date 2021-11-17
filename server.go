@@ -25,6 +25,7 @@ func server(serverCrt, serverKey string) {
 	//     http.Handle(base+"/js/", http.StripPrefix(base+"/js/", http.FileServer(http.Dir(Config.Jscripts))))
 	//     http.Handle(base+"/images/", http.StripPrefix(base+"/images/", http.FileServer(http.Dir(Config.Images))))
 	// the request handler
+	http.HandleFunc(fmt.Sprintf("%s/status", Config.Base), StatusHandler)
 	http.HandleFunc(fmt.Sprintf("%s", Config.Base), DataHandler)
 
 	// start HTTP or HTTPs server based on provided configuration
