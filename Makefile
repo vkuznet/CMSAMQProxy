@@ -9,13 +9,13 @@ build:
 build_debug:
 	go clean; rm -rf pkg; go build -o cmsamqproxy ${flags} -gcflags="-m -m"
 
-build_all: build_osx build_linux build
+build_all: build_darwin build_amd64 build
 
-build_osx:
-	go clean; rm -rf pkg cmsamqproxy_osx; GOOS=darwin go build -o cmsamqproxy ${flags}
+build_darwin:
+	go clean; rm -rf pkg cmsamqproxy_darwin; GOOS=darwin go build -o cmsamqproxy ${flags}
 
-build_linux:
-	go clean; rm -rf pkg cmsamqproxy_linux; GOOS=linux go build -o cmsamqproxy ${flags}
+build_amd64:
+	go clean; rm -rf pkg cmsamqproxy_amd64; GOOS=linux go build -o cmsamqproxy ${flags}
 
 build_power8:
 	go clean; rm -rf pkg cmsamqproxy_power8; GOARCH=ppc64le GOOS=linux go build -o cmsamqproxy ${flags}

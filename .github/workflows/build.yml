@@ -23,28 +23,20 @@ jobs:
     - name: Build
       run: |
         make
+        echo "AMD64 build"
+        make build_amd64;   mv cmsamqproxy cmsamqproxy_amd64
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
+        echo "Darwin build"
+        make build_darwin;  mv cmsamqproxy cmsamqproxy_darwin
 
-    - name: Upload linux binary
-      id: upload-cmsamqproxy
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./src/go/cmsamqproxy
-        asset_name: cmsamqproxy
-        asset_content_type: application/octet-stream
+        echo "Power8 build"
+        make build_power8;  mv cmsamqproxy cmsamqproxy_power8
+
+        echo "ARM64 build"
+        make build_arm64;   mv cmsamqproxy cmsamqproxy_arm64
+
+        echo "Windows build"
+        make build_windows; mv cmsamqproxy cmsamqproxy_windows
 
     - name: Get the Ref
       id: get-ref
@@ -74,6 +66,72 @@ jobs:
         registry: registry.cern.ch
         repository: cmsweb/cmsamqproxy
         tag_with_ref: true
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload amd64 binary
+      id: upload-auth-proxy-server
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cmsamqproxy_amd64
+        asset_name: cmsamqproxy_amd64
+        asset_content_type: application/octet-stream
+
+    - name: Upload darwin binary
+      id: upload-auth-proxy-server-darwin
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cmsamqproxy_darwin
+        asset_name: cmsamqproxy_darwin
+        asset_content_type: application/octet-stream
+
+    - name: Upload power8 binary
+      id: upload-auth-proxy-server-power8
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cmsamqproxy_power8
+        asset_name: cmsamqproxy_power8
+        asset_content_type: application/octet-stream
+
+    - name: Upload arm64 binary
+      id: upload-auth-proxy-server-arm64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cmsamqproxy_arm64
+        asset_name: cmsamqproxy_arm64
+        asset_content_type: application/octet-stream
+
+    - name: Upload windows binary
+      id: upload-auth-proxy-server-windows
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cmsamqproxy_windows
+        asset_name: cmsamqproxy_windows
+        asset_content_type: application/octet-stream
 
 #     - name: Push new image to k8s
 #       run: |
