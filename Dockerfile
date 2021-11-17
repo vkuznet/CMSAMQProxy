@@ -18,4 +18,4 @@ RUN git checkout tags/$TAG -b build && make
 # RUN mkdir -p /data
 # https://blog.baeke.info/2021/03/28/distroless-or-scratch-for-go-apps/
 FROM gcr.io/distroless/static AS final
-COPY --from=go-builder /data/cmsamqproxy /data/
+COPY --from=go-builder /data/CMSAMQProxy/cmsamqproxy /data/
