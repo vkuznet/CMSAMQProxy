@@ -10,6 +10,10 @@ import (
 var stompMgr *stomp.StompManager
 
 func initStompManager() {
+	if Config.Endpoint == "" {
+		log.Println("run without stomp endpoint")
+		return
+	}
 	// init stomp manager
 	c := stomp.Config{
 		URI:         Config.StompURI,

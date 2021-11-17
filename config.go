@@ -72,8 +72,5 @@ func parseConfig(configFile string) error {
 	if Config.StompPassword == "" {
 		log.Fatal("Wrong configuration, StompPassword is missing")
 	}
-	if Config.Endpoint == "" {
-		log.Fatal("Wrong configuration, Endpoint is missing")
-	}
 	return nil
 }

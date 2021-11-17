@@ -4,7 +4,7 @@ To run, please create new config file like this one:
 ```
 cat > config.json << EOF
 {
-    "base": "/cmsamqpoxy",
+    "base": "/cmsamqproxy",
     "port": 8200,
     "logFile": "/tmp/cmsamqproxy.log",
     "stompURI": "uri",

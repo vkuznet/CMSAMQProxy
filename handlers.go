@@ -80,7 +80,7 @@ func processRequest(r *http.Request) ([]Record, error) {
 		metadata["_id"] = uid
 		metadata["uuid"] = uid
 		rec["metadata"] = metadata
-		data, err := json.Marshal(r)
+		data, err := json.Marshal(rec)
 		if err != nil {
 			if Config.Verbose > 0 {
 				log.Printf("Unable to marshal, error: %v, data: %+v\n", err, rec)
