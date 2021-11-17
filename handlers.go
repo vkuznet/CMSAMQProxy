@@ -1,8 +1,10 @@
 package main
 
 import (
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,6 +12,17 @@ import (
 
 // Record defines general CMSAMQProxy record
 type Record map[string]interface{}
+
+// GzipReader struct to handle GZip'ed content of HTTP requests
+type GzipReader struct {
+	*gzip.Reader
+	io.Closer
+}
+
+// Close function closes gzip reader
+func (gz GzipReader) Close() error {
+	return gz.Closer.Close()
+}
 
 // StatusHandler handles all CMSAMQProxy requests
 func StatusHandler(w http.ResponseWriter, r *http.Request) {
@@ -71,14 +84,26 @@ func processRequest(r *http.Request) ([]Record, error) {
 	// it is better to read whole body instead of using json decoder
 	//     err := json.NewDecoder(r.Body).Decode(&rec)
 	// since we can print body later for debugging purposes
-	body, err := ioutil.ReadAll(r.Body)
+	body := r.Body
+	// handle gzip content encoding
+	if r.Header.Get("Content-Encoding") == "gzip" {
+		r.Header.Del("Content-Length")
+		reader, err := gzip.NewReader(r.Body)
+		if err != nil {
+			log.Println("unable to get gzip reader", err)
+			return out, err
+		}
+		body = GzipReader{reader, r.Body}
+	}
+	data, err := ioutil.ReadAll(body)
 	if err != nil {
 		log.Println("Unable to read request body", err)
 	}
-	err = json.Unmarshal(body, &records)
+
+	err = json.Unmarshal(data, &records)
 	if err != nil {
 		if Config.Verbose > 0 {
-			log.Printf("Unable to decode input request, error %v, request %+v\n%+v\n", err, r, string(body))
+			log.Printf("Unable to decode input request, error %v, request %+v\n%+v\n", err, r, string(data))
 		} else {
 			log.Printf("Unable to decode input request, error %v\n", err)
 		}
