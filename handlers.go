@@ -113,17 +113,19 @@ func processRequest(r *http.Request) ([]Record, error) {
 	var ids []string
 	for _, rec := range records {
 		uid := genUUID()
+		rrr := make(Record)
+		rrr["data"] = rec
 		producer := Config.Producer
 		metadata := make(Record)
 		//metadata["timestamp"] = time.Now().Unix() * 1000
 		metadata["producer"] = producer
 		metadata["_id"] = uid
 		metadata["uuid"] = uid
-		rec["metadata"] = metadata
-		data, err := json.Marshal(rec)
+		rrr["metadata"] = metadata
+		data, err := json.Marshal(rrr)
 		if err != nil {
 			if Config.Verbose > 0 {
-				log.Printf("Unable to marshal, error: %v, data: %+v\n", err, rec)
+				log.Printf("Unable to marshal, error: %v, data: %+v\n", err, rrr)
 			} else {
 				log.Printf("Unable to marshal, error: %v, data\n", err)
 			}
