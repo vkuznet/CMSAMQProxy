@@ -1,6 +1,7 @@
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/go-stomp/stomp v2.1.2+incompatible h1:yCaLuMAUY4Z0j1zAiT2sVAhJZyzSRjnYu+oHdlm+zY8=
+github.com/dmwm/cmsauth v0.0.0-20211207135132-0c4d521f498c h1:l/LcUlODRmAJ1SRdAC68HcO8exiNby7ys8VXkaa+fBs=
+github.com/dmwm/cmsauth v0.0.0-20211207135132-0c4d521f498c/go.mod h1:srkPo6iPp6d/T+/ZprqYBFXl/B6fF5ejjNuyP7CT39s=
 github.com/go-stomp/stomp v2.1.2+incompatible/go.mod h1:VqCtqNZv1226A1/79yh+rMiFUcfY3R109np+7ke4n0c=
 github.com/go-stomp/stomp v2.1.4+incompatible h1:D3SheUVDOz9RsjVWkoh/1iCOwD0qWjyeTZMUZ0EXg2Y=
 github.com/go-stomp/stomp v2.1.4+incompatible/go.mod h1:VqCtqNZv1226A1/79yh+rMiFUcfY3R109np+7ke4n0c=
@@ -30,6 +31,8 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/vkuznet/lb-stomp v0.0.8 h1:qtDQ4oPhDGPlLbnFTUjUCaYq7KW58+sec+EFk4qYz4I=
 github.com/vkuznet/lb-stomp v0.0.8/go.mod h1:7hbwlArhxILW2ooa/j7j9g7rvkXMwpMM6QD2xAnZFpo=
+github.com/vkuznet/x509proxy v0.0.0-20210801171832-e47b94db99b6 h1:Y5LCuH9nfTZ6srI5NaoKKbcDb01zqTHw8678++4fw0c=
+github.com/vkuznet/x509proxy v0.0.0-20210801171832-e47b94db99b6/go.mod h1:gfEPE3azFe+K/nMLezta3+kTiumttEYDawGAE72IYfM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c h1:Hei/4ADfdWqJk1ZMxUNpqntNwaWcugrBjAiHlqqRiVk=
 gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c/go.mod h1:JHkPIbrfpd72SG/EVd6muEfDQjcINNoR0C8j2r3qZ4Q=

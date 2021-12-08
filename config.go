@@ -11,6 +11,7 @@ type Configuration struct {
 
 	// HTTP server configuration options
 	Port      int    `json:"port"`      // server port number
+	Hmac      string `json:"hmac"`      // hmac string
 	Base      string `json:"base"`      // base URL
 	Verbose   int    `json:"verbose"`   // verbose output
 	ServerCrt string `json:"serverCrt"` // path to server crt file
@@ -28,6 +29,11 @@ type Configuration struct {
 	ContentType      string `json:"contentType"`      // ContentType of UDP packet
 	Protocol         string `json:"protocol"`         // protocol to use in stomp, e.g. tcp, tcp4 or tcp6
 	Producer         string `json:"producer"`         // producer name
+
+	// CMS options
+	CMSRole  string `json:"cms_role"`  // CMS role
+	CMSGroup string `json:"cms_group"` // CMS group
+	CMSSite  string `json:"cms_site"`  // CMS site
 }
 
 // Config variable represents configuration object

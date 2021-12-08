@@ -46,6 +46,20 @@ func DataHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(info()))
 		return
 	}
+	authStatus := CMSAuth.CheckAuthnAuthz(r.Header)
+	if !authStatus {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	// check CMS role/group (or site)
+	if Config.CMSRole != "" && Config.CMSGroup != "" {
+		authzStatus := CMSAuth.CheckCMSAuthz(r.Header, Config.CMSRole, Config.CMSGroup, Config.CMSSite)
+		if !authzStatus {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+	}
+
 	out, err := processRequest(r)
 	if err != nil {
 		log.Println(r.Method, r.URL.Path, r.RemoteAddr, err)

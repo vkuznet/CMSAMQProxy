@@ -5,8 +5,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/dmwm/cmsauth"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 )
+
+// CMSAuth structure to create CMS Auth headers
+var CMSAuth cmsauth.CMSAuth
 
 // custom rotate logger
 type rotateLogWriter struct {
@@ -19,6 +23,10 @@ func (w rotateLogWriter) Write(data []byte) (int, error) {
 
 // http server implementation
 func server(serverCrt, serverKey string) {
+
+	// init cmsauth module
+	CMSAuth.Init(Config.Hmac)
+
 	// define server handlers
 	//     base := Config.Base
 	//     http.Handle(base+"/css/", http.StripPrefix(base+"/css/", http.FileServer(http.Dir(Config.Styles))))
