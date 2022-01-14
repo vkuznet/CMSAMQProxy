@@ -44,20 +44,21 @@ func StatusHandler(w http.ResponseWriter, r *http.Request) {
 // HttpRequestHandler handles all CMSAMQProxy requests
 func HttpRequestHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Method, r.URL, r.Proto, r.Host, r.RemoteAddr, r.Header)
-	if r.Method == "GET" {
-		// print out all request headers
-		fmt.Fprintf(w, "%s %s %s \n", r.Method, r.URL, r.Proto)
-		for k, v := range r.Header {
-			h := strings.ToLower(k)
-			if strings.Contains(h, "hmac") || strings.Contains(h, "cookie") {
-				continue
-			}
-			fmt.Fprintf(w, "Header field %q, Value %q\n", k, v)
-		}
-		fmt.Fprintf(w, "Host = %q\n", r.Host)
-		fmt.Fprintf(w, "RemoteAddr= %q\n", r.RemoteAddr)
-		fmt.Fprintf(w, "\n\nFinding value of \"Accept\" %q\n", r.Header["Accept"])
 
+	// print out all request headers
+	fmt.Fprintf(w, "%s %s %s \n", r.Method, r.URL, r.Proto)
+	for k, v := range r.Header {
+		h := strings.ToLower(k)
+		if strings.Contains(h, "hmac") || strings.Contains(h, "cookie") {
+			continue
+		}
+		fmt.Fprintf(w, "Header field %q, Value %q\n", k, v)
+	}
+	fmt.Fprintf(w, "Host = %q\n", r.Host)
+	fmt.Fprintf(w, "RemoteAddr= %q\n", r.RemoteAddr)
+	fmt.Fprintf(w, "\n\nFinding value of \"Accept\" %q\n", r.Header["Accept"])
+
+	if r.Method == "GET" {
 		page := "Hello from Go\n"
 		w.Write([]byte(page))
 	} else {
