@@ -8,8 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/http/httputil"
-	"strings"
 )
 
 // Record defines general CMSAMQProxy record
@@ -41,53 +39,6 @@ func StatusHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-// HttpRequestHandler handles all CMSAMQProxy requests
-func HttpRequestHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println(r.Method, r.URL, r.Proto, r.Host, r.RemoteAddr, r.Header)
-
-	// print out all request headers
-	fmt.Fprintf(w, "%s %s %s \n", r.Method, r.URL, r.Proto)
-	for k, v := range r.Header {
-		h := strings.ToLower(k)
-		if strings.Contains(h, "hmac") || strings.Contains(h, "cookie") {
-			continue
-		}
-		fmt.Fprintf(w, "Header field %q, Value %q\n", k, v)
-	}
-	fmt.Fprintf(w, "Host = %q\n", r.Host)
-	fmt.Fprintf(w, "RemoteAddr= %q\n", r.RemoteAddr)
-	fmt.Fprintf(w, "\n\nFinding value of \"Accept\" %q\n", r.Header["Accept"])
-
-	if r.Method == "GET" {
-		page := "Hello from Go\n"
-		w.Write([]byte(page))
-	} else {
-		requestDump, err := httputil.DumpRequest(r, true)
-		if err != nil {
-			fmt.Fprint(w, err.Error())
-		} else {
-			fmt.Fprint(w, string(requestDump))
-		}
-	}
-}
-
-func checkCMSAuthz(header http.Header, role, group, site string) bool {
-	log.Printf("checkCMSAuthz role %s group %s site %s", role, group, site)
-	for key, vals := range header {
-		log.Println("check", key, vals)
-		if strings.HasPrefix(strings.ToLower(key), "cms-authz") && strings.Contains(strings.ToLower(key), strings.ToLower(role)) {
-			for _, val := range vals {
-				v := strings.ToLower(val)
-				if strings.Contains(v, strings.ToLower(group)) || strings.Contains(v, strings.ToLower(site)) {
-					log.Println("matched header %s value %v with role %s group %s site %s", key, val, role, group, site)
-					return true
-				}
-			}
-		}
-	}
-	return false
-}
-
 // DataHandler handles all CMSAMQProxy requests
 func DataHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -104,10 +55,6 @@ func DataHandler(w http.ResponseWriter, r *http.Request) {
 	// check CMS role/group (or site)
 	if Config.CMSRole != "" && Config.CMSGroup != "" {
 		authzStatus := CMSAuth.CheckCMSAuthz(r.Header, Config.CMSRole, Config.CMSGroup, Config.CMSSite)
-		log.Printf("Config %+v", Config)
-		log.Println("CMSAuth.CheckCMSAuthz", authzStatus)
-		authzStatus = checkCMSAuthz(r.Header, Config.CMSRole, Config.CMSGroup, Config.CMSSite)
-		log.Println("checkCMSAuthz", authzStatus)
 		if !authzStatus {
 			log.Printf("fail to authorize request %+v, cms role=%s group=%s site=%s status=%v", r.Header, Config.CMSRole, Config.CMSGroup, Config.CMSSite, authzStatus)
 			w.WriteHeader(http.StatusUnauthorized)
