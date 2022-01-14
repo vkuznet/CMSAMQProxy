@@ -48,6 +48,7 @@ func DataHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	authStatus := CMSAuth.CheckAuthnAuthz(r.Header)
 	if !authStatus {
+		log.Printf("fail to auth request %+v", r.Header)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -55,6 +56,7 @@ func DataHandler(w http.ResponseWriter, r *http.Request) {
 	if Config.CMSRole != "" && Config.CMSGroup != "" {
 		authzStatus := CMSAuth.CheckCMSAuthz(r.Header, Config.CMSRole, Config.CMSGroup, Config.CMSSite)
 		if !authzStatus {
+			log.Printf("fail to authorize request %+v, cms role=%s group=%s", r.Header, Config.CMSRole, Config.CMSGroup)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}

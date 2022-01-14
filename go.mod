@@ -3,7 +3,7 @@ module github.com/vkuznet/CMSAMQProxy
 go 1.17
 
 require (
-	github.com/dmwm/cmsauth v0.0.0-20211208182414-63bf334a3d9d
+	github.com/dmwm/cmsauth v0.0.0-20211208190746-4666f3e7a7aa
 	github.com/google/uuid v1.3.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/vkuznet/lb-stomp v0.0.8

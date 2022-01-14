@@ -4,6 +4,8 @@ github.com/dmwm/cmsauth v0.0.0-20211207135132-0c4d521f498c h1:l/LcUlODRmAJ1SRdAC
 github.com/dmwm/cmsauth v0.0.0-20211207135132-0c4d521f498c/go.mod h1:srkPo6iPp6d/T+/ZprqYBFXl/B6fF5ejjNuyP7CT39s=
 github.com/dmwm/cmsauth v0.0.0-20211208182414-63bf334a3d9d h1:cLZRomHvEm54fFrOYDGH9fURCDQcFKhRMtDbIDEenzE=
 github.com/dmwm/cmsauth v0.0.0-20211208182414-63bf334a3d9d/go.mod h1:srkPo6iPp6d/T+/ZprqYBFXl/B6fF5ejjNuyP7CT39s=
+github.com/dmwm/cmsauth v0.0.0-20211208190746-4666f3e7a7aa h1:1L5vO4DpPWOdaN8evgA6wWL2c+ictf70DUbLcseXljg=
+github.com/dmwm/cmsauth v0.0.0-20211208190746-4666f3e7a7aa/go.mod h1:srkPo6iPp6d/T+/ZprqYBFXl/B6fF5ejjNuyP7CT39s=
 github.com/go-stomp/stomp v2.1.2+incompatible/go.mod h1:VqCtqNZv1226A1/79yh+rMiFUcfY3R109np+7ke4n0c=
 github.com/go-stomp/stomp v2.1.4+incompatible h1:D3SheUVDOz9RsjVWkoh/1iCOwD0qWjyeTZMUZ0EXg2Y=
 github.com/go-stomp/stomp v2.1.4+incompatible/go.mod h1:VqCtqNZv1226A1/79yh+rMiFUcfY3R109np+7ke4n0c=
