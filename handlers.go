@@ -104,6 +104,7 @@ func DataHandler(w http.ResponseWriter, r *http.Request) {
 	// check CMS role/group (or site)
 	if Config.CMSRole != "" && Config.CMSGroup != "" {
 		authzStatus := CMSAuth.CheckCMSAuthz(r.Header, Config.CMSRole, Config.CMSGroup, Config.CMSSite)
+		log.Printf("Config %+v", Config)
 		log.Println("CMSAuth.CheckCMSAuthz", authzStatus)
 		authzStatus = checkCMSAuthz(r.Header, Config.CMSRole, Config.CMSGroup, Config.CMSSite)
 		log.Println("checkCMSAuthz", authzStatus)
