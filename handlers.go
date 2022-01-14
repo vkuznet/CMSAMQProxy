@@ -72,7 +72,7 @@ func HttpRequestHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkCMSAuthz(header http.Header, role, group, site string) bool {
-	log.Println("checkCMSAuthz role %s group %s site %s", role, group, site)
+	log.Printf("checkCMSAuthz role %s group %s site %s", role, group, site)
 	for key, vals := range header {
 		log.Println("check", key, vals)
 		if strings.HasPrefix(strings.ToLower(key), "cms-authz") && strings.Contains(strings.ToLower(key), strings.ToLower(role)) {

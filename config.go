@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 )
@@ -34,6 +35,11 @@ type Configuration struct {
 	CMSRole  string `json:"cms_role"`  // CMS role
 	CMSGroup string `json:"cms_group"` // CMS group
 	CMSSite  string `json:"cms_site"`  // CMS site
+}
+
+func (c *Configuration) String() string {
+	msg := fmt.Sprintf("<Config: role=%s group=%s site=%s port=%d stormURI=%s>", c.CMSRole, c.CMSGroup, c.CMSSite, c.Port, c.StompURI)
+	return msg
 }
 
 // Config variable represents configuration object

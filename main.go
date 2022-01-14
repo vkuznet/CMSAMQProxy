@@ -37,6 +37,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to parse config file %s, error: %v", config, err)
 	}
+	log.Println(Config.String())
 	// set log file or log output
 	if Config.LogFile != "" {
 		logName := Config.LogFile + "-%Y%m%d"
