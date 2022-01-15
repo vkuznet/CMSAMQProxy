@@ -2,6 +2,8 @@ package main
 
 import (
 	"compress/gzip"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -94,8 +96,8 @@ func DataHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // helper function to process http request with list of records
-func processRequest(r *http.Request) ([]Record, error) {
-	var out, records []Record
+func rawData(r *http.Request) ([]Record, error) {
+	var records []Record
 	defer r.Body.Close()
 	// it is better to read whole body instead of using json decoder
 	//     err := json.NewDecoder(r.Body).Decode(&rec)
@@ -107,72 +109,103 @@ func processRequest(r *http.Request) ([]Record, error) {
 		reader, err := gzip.NewReader(r.Body)
 		if err != nil {
 			log.Println("unable to get gzip reader", err)
-			return out, err
+			return records, err
 		}
 		body = GzipReader{reader, r.Body}
 	}
 	data, err := ioutil.ReadAll(body)
 	if err != nil {
 		log.Println("Unable to read request body", err)
+		return records, err
 	}
 
 	err = json.Unmarshal(data, &records)
+	return records, err
+}
+
+// helper function to process http request with list of records
+func processRequest(r *http.Request) ([]Record, error) {
+	records, err := rawData(r)
 	if err != nil {
 		if Config.Verbose > 0 {
-			log.Printf("Unable to decode input request, error %v, request %+v\n%+v\n", err, r, string(data))
-		} else {
 			log.Printf("Unable to decode input request, error %v\n", err)
 		}
-		return out, err
+		return records, err
 	}
-	// send data with this stomp connection
+
+	var out []Record
 	var ids []string
-	for _, rec := range records {
-		uid := genUUID()
-		rrr := make(Record)
-		rrr["data"] = rec
-		producer := Config.Producer
-		metadata := make(Record)
-		//metadata["timestamp"] = time.Now().Unix() * 1000
-		metadata["producer"] = producer
-		metadata["_id"] = uid
-		metadata["uuid"] = uid
-		rrr["metadata"] = metadata
-		data, err := json.Marshal(rrr)
-		if err != nil {
-			if Config.Verbose > 0 {
-				log.Printf("Unable to marshal, error: %v, data: %+v\n", err, rrr)
-			} else {
-				log.Printf("Unable to marshal, error: %v, data\n", err)
-			}
-			continue
-		}
 
-		// dump message to our log
-		if Config.Verbose > 1 {
-			log.Println("New record", string(data))
-		}
-
-		// send data to Stomp endpoint
-		if Config.Endpoint != "" {
-			err := stompMgr.Send(data)
-			if err == nil {
-				ids = append(ids, uid)
-			} else {
-				// get new stomp Manager
-				initStompManager()
-				record := make(Record)
-				record["status"] = "fail"
-				record["reason"] = fmt.Sprintf("Unable to send data to MONIT, error: %v", err)
-				record["ids"] = ids
-				out = append(out, record)
+	// return data immediately if we did not ask to wrap it for MONIT
+	if !Config.MonitWrapper {
+		for _, rec := range records {
+			data, err := json.Marshal(rec)
+			if err != nil {
+				log.Println("unable to marshal the data", err)
 				return out, err
 			}
-		} else {
-			ids = append(ids, uid)
+			arr := md5.Sum(data)
+			rid := hex.EncodeToString(arr[:])
+			ids = append(ids, rid)
+			if Config.Verbose > 1 {
+				log.Println("raw record", rec, rid)
+			}
+			// send data to Stomp endpoint
+			if Config.Endpoint != "" {
+				err = stompMgr.Send(data)
+			}
 		}
+	} else {
 
+		// send data with this stomp connection
+		for _, rec := range records {
+			uid := genUUID()
+			rrr := make(Record)
+			rrr["data"] = rec
+			producer := Config.Producer
+			metadata := make(Record)
+			//metadata["timestamp"] = time.Now().Unix() * 1000
+			metadata["producer"] = producer
+			metadata["_id"] = uid
+			metadata["uuid"] = uid
+			rrr["metadata"] = metadata
+			data, err := json.Marshal(rrr)
+			if err != nil {
+				if Config.Verbose > 0 {
+					log.Printf("Unable to marshal, error: %v, data: %+v\n", err, rrr)
+				} else {
+					log.Printf("Unable to marshal, error: %v, data\n", err)
+				}
+				continue
+			}
+
+			// dump message to our log
+			if Config.Verbose > 1 {
+				log.Println("monit record", string(data))
+			}
+
+			// send data to Stomp endpoint
+			if Config.Endpoint != "" {
+				err := stompMgr.Send(data)
+				if err == nil {
+					ids = append(ids, uid)
+				} else {
+					// get new stomp Manager
+					initStompManager()
+					record := make(Record)
+					record["status"] = "fail"
+					record["reason"] = fmt.Sprintf("Unable to send data to MONIT, error: %v", err)
+					record["ids"] = ids
+					out = append(out, record)
+					return out, err
+				}
+			} else {
+				ids = append(ids, uid)
+			}
+
+		}
 	}
+
 	// prepare output wmarhchive response record
 	record := make(Record)
 	if len(ids) > 0 {

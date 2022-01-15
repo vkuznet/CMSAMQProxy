@@ -30,6 +30,7 @@ type Configuration struct {
 	ContentType      string `json:"contentType"`      // ContentType of UDP packet
 	Protocol         string `json:"protocol"`         // protocol to use in stomp, e.g. tcp, tcp4 or tcp6
 	Producer         string `json:"producer"`         // producer name
+	MonitWrapper     bool   `json:"monit_wrapper"`    // wrap data for MONIT
 
 	// CMS options
 	CMSRole  string `json:"cms_role"`  // CMS role
